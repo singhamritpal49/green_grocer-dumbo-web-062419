@@ -17,22 +17,21 @@ end
 
 
 def apply_coupons(cart, coupons)
-  with_coupons = {}
-   cart.each do |food,food_info|
-     coupon.each do |coupon|
-       if food ==[:coupon] && food_info[:count] >= coupon[:num]
-         food[:count] = info[:count] - coupon[:num]
-       elsif with_coupons["#{food} W/COUPON"]
-          with_coupons["#{food} W/COUPON"][:count] += 1
-        else
-          with_coupons["#{food} W/COUPON"] = {:price => coupon[:cost], :clearance => info[:clearance], :count => 1}
+  coupons.each do |coupon|
+    name = coupon[:item]
+    if cart[name] && cart[name][:count] >= coupon[:num]
+      if cart["#{name} W/COUPON"]
+        cart["#{name} W/COUPON"][:count] += 1
+      else
+        cart["#{name} W/COUPON"] = {:count => 1, :price => coupon[:cost]}
+        cart["#{name} W/COUPON"][:clearance] = cart[name][:clearance]
+      end
+      cart[name][:count] -= coupon[:num]
+    end
+  end
+  cart
 end
-end
-end
-with_coupons[food] = food_info
-end
-with_coupons
-end
+
 
 def apply_clearance(cart)
   # code here
